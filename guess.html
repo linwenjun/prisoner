@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+
+        body {
+            text-align: center;
+        }
+        button {
+            font-size: 50px;
+            margin: 15px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 80px;
+            height: 100px;
+            line-height: 100px;
+        }
+
+        h2 {
+            display: inline-block;
+            margin: 20px;
+        }
+        #correctCount {
+            color: green;
+        }
+        #incorrectCount {
+            color: red;
+        }
+        #restartBtn {
+            background: red;
+        }
+        #timerDisplay {
+            font-size: 2em;
+        }
+    </style>
+    <script src="wordGenerator.js"></script>
+</head>
+<body>
+    <h1 id="display">
+        预备
+    </h1>
+    <h2>正确<span id="correctCount">0</span></h2>
+    <h2>跳过<span id="jumpCount">0</span></h2>
+    <div></div>
+    <button id="correctBtn">正确</button>
+    <button id="nextBtn">下一个</button>
+    <button id="restartBtn">开始</button>
+    <div></div>
+    <h2>倒计时<span id="timerDisplay">180</span></h2>
+
+    <script>
+
+        var words = wordGenerator();
+        var index = 0;
+        var correct = 0;
+        var incorrect = 0;
+        var jump = 0;
+
+
+        var display = document.getElementById("display");
+        var correctBtn = document.getElementById("correctBtn");
+        var incorrectBtn = document.getElementById("incorrectBtn");
+        var restartBtn = document.getElementById("restartBtn");
+        var nextBtn = document.getElementById("nextBtn");
+        var correctCount = document.getElementById("correctCount");
+        var incorrectCount = document.getElementById("incorrectCount");
+        var jumpCount = document.getElementById("jumpCount");
+
+        var timerDisplay = document.getElementById('timerDisplay');
+
+        correctBtn.addEventListener("click", function() {
+            correctCount.innerHTML = ++correct;
+            next();
+        })
+
+        restartBtn.addEventListener("click", function() {
+            words = wordGenerator();
+            index = 0;
+            correct = 0;
+            incorrect = 0;
+            jump = 0;
+            correctCount.innerHTML = 0;
+            jumpCount.innerHTML = 0;
+            correctBtn.disabled = false;
+            nextBtn.disabled = false;
+            restartBtn.disabled = true;
+            countDown();
+            next();
+        })
+
+        nextBtn.addEventListener("click", function() {
+            jumpCount.innerHTML = ++jump;
+            next();
+        })
+
+        function next() {
+            display.innerHTML = words[index++];
+        }
+
+        var interval;
+
+        function countDown() {
+
+            if(interval) {
+                window.clearInterval(interval);
+            }
+
+            var time = 180;
+
+            timerDisplay.innerHTML = time;
+            interval = window.setInterval(function() {
+                time--;
+                timerDisplay.innerHTML = time;
+                if(time <= 0 ) {
+                    window.clearInterval(interval);
+                    correctBtn.disabled = true;
+                    nextBtn.disabled = true;
+                    restartBtn.disabled = false;
+                };
+            }, 1000);
+        }
+
+    </script>
+</body>
+</html>
